@@ -5,7 +5,12 @@
 class Sprite {
     public:
     float pos[2];
+    bool isVisible = true;
+    bool isDestructible = false;
+
     Sprite() {
+        this->pos[0] = 0.0f;
+        this->pos[1] = 0.0f;
     }
     virtual ~Sprite() {
     }

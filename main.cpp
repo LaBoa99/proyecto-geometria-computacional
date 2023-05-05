@@ -8,6 +8,8 @@
 #include <vector>
 
 #include <sprite.h>
+#include <player.h>
+#include <wall.h>
 
 using namespace std;
 
@@ -19,11 +21,15 @@ float lastTime = 0;
 float second = 0;
 clock_t current_ticks;
 
-// Tetris
+// Game opts
 vector<Sprite*> things;
+Player player;
+// cada X segundos genera un nueva wall
+unsigned int every_second_wall = 7;
+unsigned int count_second_wall = 0;
 
 void init(){
-
+    things.push_back(new Wall());
 }
 
 void display(void){
@@ -31,6 +37,7 @@ void display(void){
 
     //Draw Things
     // EJemplo de fondo
+    // Se deja como rect si se quiere cambiar de color de manera no destructiva
     glColor3f(0.46, 0.9, 1.0);
     glBegin(GL_QUADS);
         glVertex2d(0, 0);
@@ -38,6 +45,13 @@ void display(void){
         glVertex2d(1, 1);
         glVertex2d(1, 0);
     glEnd();
+
+    // Cosas
+    player.draw();
+    for(Sprite* thing : things){
+        thing->draw();
+    }
+
     glFlush();
     glutSwapBuffers();
 }
@@ -48,12 +62,45 @@ void idle(){
     lastTime = currentTime;
     // Funcion de update;
     if(second >= 1){
-        cout << second << endl;
+        // Esto se puede aumatizar de mejor manera pero es temporal
+        count_second_wall++;
+        if(count_second_wall == every_second_wall){
+            things.push_back(new Wall());
+            count_second_wall = 0;
+        }
         second = 0;
     }
     second += deltaTime;
+    // Sprite* thing : things
+    for(int i = 0; i < things.size(); i++){
+        Sprite* thing = things[i];
+        thing->update(deltaTime);
+        // Nos deshacemos de los elementos no visibles y destructibles
+        // Que no sea visible no signifca que tambien destructible
+        if(thing->isDestructible){
+            delete thing;
+            things.erase(things.begin() + i);
+            i--;
+        }
+    }
+    cout << "Walls activas: " <<  things.size() << endl;
+    player.update(deltaTime);
     glutPostRedisplay();
 }
+
+// EVENTS
+
+void onMouse(int button, int state, int x, int y){
+    if(state == GLUT_DOWN){
+        if(button == GLUT_LEFT_BUTTON){
+            player.jump();
+        }
+    } else if (state == GLUT_UP){
+        player.fall();
+    }
+}
+
+// END EVENTS
 
 void reshape(GLsizei width, GLsizei height) {
     glViewport(0, 0, width, height);
@@ -80,7 +127,7 @@ int main(int argc, char** argv) {
     //glutMotionFunc(onMouseMotion);
     //glutPassiveMotionFunc(onMouseMotion);
     //glutKeyboardFunc(onKeyboard);
-    //glutMouseFunc(onMouse);
+    glutMouseFunc(onMouse);
     glutIdleFunc(idle);
     glutReshapeFunc(reshape);
 
