@@ -21,7 +21,6 @@ unsigned int phase = 1;
 float lastTime = 0;
 float second = 0;
 float seconds_passed = 0;
-int millspassed = 0;
 float degrees = 45;
 clock_t current_ticks;
 
@@ -42,14 +41,7 @@ void display(void){
     //Draw Things
     // EJemplo de fondo
     // Se deja como rect si se quiere cambiar de color de manera no destructiva
-    if(phase == 1)
-        glColor3f(second, 0.5, 0.5);
-    else if(phase == 2)
-        glColor3f(1.0 - second, second, 0.5f);
-    else if(phase == 3)
-        glColor3f(second, 0.5f, second);
-    else
-        glColor3f(second, 0.5f, 1.0f - second);
+    glColor3f(0.0f, 0.5f, 1.0f);
     glBegin(GL_QUADS);
         glVertex2d(0, 0);
         glVertex2d(0, 1);
@@ -83,7 +75,6 @@ void idle(){
         }
         second = 0;
         seconds_passed++;
-        phase += phase < 3 ? 1 : -3;
     }
     second += deltaTime;
     degrees = sin(second + seconds_passed);
@@ -99,7 +90,6 @@ void idle(){
             i--;
         }
     }
-    cout << "Walls activas: " <<  things.size() << endl;
     player.update(deltaTime);
     glutPostRedisplay();
 }

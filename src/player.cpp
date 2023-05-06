@@ -31,7 +31,6 @@ void Player::update(float deltaTime) {
         if(this->acc < 0)
             this->acc += abs(this->GRAVITY) * deltaTime;
     }
-    std::cout << "acc" << (Sprite::pos[1] + this->SIZE <= 1) << std::endl;
 }
 
 void Player::jump(){
