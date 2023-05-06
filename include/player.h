@@ -1,15 +1,16 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <sprite.h>
+#include "sprite.h"
 
 
 class Player : public Sprite
 {
     public:
         bool isJumping = false;
+        bool isFalling = true;
         bool isAlive = true;
-        float vel, acc;
+        float vel, acc = 0, accJ = 0;
 
         Player();
         virtual ~Player();
@@ -25,8 +26,8 @@ class Player : public Sprite
         void drawPlayer();
 
         const float SIZE = 0.10f;
-        const float GRAVITY = 9.8f;
-        const float JUMP_VEL = 0.9f;
+        const float GRAVITY = -9.8f;
+        const float JUMP_VEL = 30.0f;
 
 };
 

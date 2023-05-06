@@ -1,10 +1,11 @@
-#include "wall.h"
-#include <utils.h>
+#include "../include/wall.h"
+#include "../include/utils.h"
 
 #include <GL/gl.h>
 
 Wall::Wall() : Sprite(){
     this->height = Utils::genRandomFloat(0.2f, 0.7f);
+    this->GAP_RECT = Utils::genRandomFloat(0.3f, 0.4f);
     this->gap_h = this->GAP_RECT + this->height;
     // esto se hace para que inicia de izquierda a derecha
     Sprite::pos[0] += 1 + this->WIDTH_RECT;

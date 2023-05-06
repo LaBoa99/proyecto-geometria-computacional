@@ -7,18 +7,22 @@
 #include <cmath>
 #include <vector>
 
-#include <sprite.h>
-#include <player.h>
-#include <wall.h>
+#include "include/sprite.h"
+#include "include/player.h"
+#include "include/wall.h"
+#include "include/utils.h"
 
 using namespace std;
 
 unsigned const int WIDTH = 800;
 unsigned const int HEIGHT = 800;
-
+unsigned int phase = 1;
 
 float lastTime = 0;
 float second = 0;
+float seconds_passed = 0;
+int millspassed = 0;
+float degrees = 45;
 clock_t current_ticks;
 
 // Game opts
@@ -38,7 +42,14 @@ void display(void){
     //Draw Things
     // EJemplo de fondo
     // Se deja como rect si se quiere cambiar de color de manera no destructiva
-    glColor3f(0.46, 0.9, 1.0);
+    if(phase == 1)
+        glColor3f(second, 0.5, 0.5);
+    else if(phase == 2)
+        glColor3f(1.0 - second, second, 0.5f);
+    else if(phase == 3)
+        glColor3f(second, 0.5f, second);
+    else
+        glColor3f(second, 0.5f, 1.0f - second);
     glBegin(GL_QUADS);
         glVertex2d(0, 0);
         glVertex2d(0, 1);
@@ -47,11 +58,13 @@ void display(void){
     glEnd();
 
     // Cosas
+    glPushMatrix();
+    glRotatef(degrees, 0, 0, -1.0);
     player.draw();
     for(Sprite* thing : things){
         thing->draw();
     }
-
+    glPopMatrix();
     glFlush();
     glutSwapBuffers();
 }
@@ -69,8 +82,11 @@ void idle(){
             count_second_wall = 0;
         }
         second = 0;
+        seconds_passed++;
+        phase += phase < 3 ? 1 : -3;
     }
     second += deltaTime;
+    degrees = sin(second + seconds_passed);
     // Sprite* thing : things
     for(int i = 0; i < things.size(); i++){
         Sprite* thing = things[i];
@@ -95,8 +111,11 @@ void onMouse(int button, int state, int x, int y){
         if(button == GLUT_LEFT_BUTTON){
             player.jump();
         }
-    } else if (state == GLUT_UP){
-        player.fall();
+    }
+    if(state == GLUT_UP){
+        if(button == GLUT_LEFT_BUTTON){
+           player.fall();
+        }
     }
 }
 

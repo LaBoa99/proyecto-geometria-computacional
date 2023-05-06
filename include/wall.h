@@ -1,7 +1,7 @@
 #ifndef WALL_H
 #define WALL_H
 
-#include <sprite.h>
+#include "sprite.h"
 
 class Wall : public Sprite
 {
@@ -17,8 +17,8 @@ class Wall : public Sprite
         void drawRect();
         float height = 0.0f;
         float gap_h;
+        float GAP_RECT = 0.4;
         const float WIDTH_RECT = 0.1;
-        const float GAP_RECT = 0.2;
 };
 
 #endif // WALL_H

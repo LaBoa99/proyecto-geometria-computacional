@@ -1,5 +1,7 @@
-#include "player.h"
+#include "../include/player.h"
+#include <iostream>
 #include <GL/gl.h>
+#include <math.h>
 
 Player::Player() : Sprite(){
     Sprite::pos[0] = 0.1f;
@@ -11,26 +13,40 @@ void Player::draw(){
 }
 
 void Player::update(float deltaTime) {
-    // Solo cae cuando no estes en el suelo
-    if (!isJumping && Sprite::pos[1] > 0) {
-        Sprite::pos[1] -= GRAVITY * deltaTime / 15;
-    // Solo salta cuando se de la indicacion y no choques con el techo
-    } else if (Sprite::pos[1] + SIZE < 1 && (Sprite::pos[1] >= 0 || isJumping)) {
-        Sprite::pos[1] += JUMP_VEL * deltaTime;
+    // GRAVEDAD
+    if(this->isJumping){
+        if(Sprite::pos[1] + this->SIZE <= 1.0f){
+            Sprite::pos[1] += (this->JUMP_VEL + accJ) * deltaTime / 15;
+            if(this->accJ < 0)
+                this->accJ += abs(this->JUMP_VEL) * deltaTime;
+        this->acc = -(this->JUMP_VEL / 2);
+        }
     }
+
+    if(Sprite::pos[1] > 0){
+        Sprite::pos[1] += (GRAVITY - acc) * deltaTime / 15;
+        if(this->isFalling){
+            this->accJ = -(abs(this->GRAVITY) * 2);
+        }
+        if(this->acc < 0)
+            this->acc += abs(this->GRAVITY) * deltaTime;
+    }
+    std::cout << "acc" << (Sprite::pos[1] + this->SIZE <= 1) << std::endl;
 }
 
 void Player::jump(){
     this->isJumping = true;
+    this->isFalling = false;
 }
 
 void Player::fall(){
     this->isJumping = false;
+    this->isFalling = true;
 }
 
 void Player::drawPlayer(){
     if(Sprite::isVisible){
-        glColor3f(0.0f, 0.5f, 1.0f);
+        glColor3f(0.0f, 0.5f, -1.0f);
         glBegin(GL_QUADS);
             glVertex2f(Sprite::pos[0], Sprite::pos[1]);
             glVertex2f(Sprite::pos[0], Sprite::pos[1] + this->SIZE);
