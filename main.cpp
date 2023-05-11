@@ -6,18 +6,19 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
+#include <string>
 
 #include "include/sprite.h"
 #include "include/player.h"
 #include "include/wall.h"
 #include "include/utils.h"
+#include "Missile.h"
 #include "entities.h"
 
 using namespace std;
 
 unsigned const int WIDTH = 800;
 unsigned const int HEIGHT = 800;
-unsigned int phase = 1;
 unsigned int score = 0;
 
 float lastTime = 0;
@@ -30,11 +31,23 @@ clock_t current_ticks;
 vector<Sprite*> things;
 Player player;
 // cada X segundos genera un nueva wall
-unsigned int every_second_wall = 7;
+unsigned int every_second_wall = 5;
 unsigned int count_second_wall = 0;
+
+unsigned int every_second_proyectile = 3;
+unsigned int count_second_proyectile = 0;
 
 void init(){
     things.push_back(new Wall());
+}
+
+void reset(){
+    score = 0;
+    for(auto thing : things){
+        delete thing;
+    }
+    things.clear();
+    player.isAlive = true;
 }
 
 void display(void){
@@ -54,11 +67,16 @@ void display(void){
     // Cosas
     glPushMatrix();
     glRotatef(degrees, 0, 0, -1.0);
-    player.draw();
-    for(Sprite* thing : things){
-        thing->draw();
-    }
+        player.draw();
+        for(Sprite* thing : things){
+            thing->draw();
+        }
     glPopMatrix();
+
+    string text = "Puntuacion: " + std::to_string(score);
+    glColor3f(1.0f, 1.0f, 1.0f);
+    Utils::renderText(text.c_str());
+
     glFlush();
     glutSwapBuffers();
 }
@@ -71,9 +89,14 @@ void idle(){
     if(second >= 1){
         // Esto se puede aumatizar de mejor manera pero es temporal
         count_second_wall++;
-        if(count_second_wall == every_second_wall){
+        count_second_proyectile ++;
+        if(count_second_wall >= every_second_wall){
             things.push_back(new Wall());
             count_second_wall = 0;
+        }
+        if(count_second_proyectile >= every_second_proyectile){
+            things.push_back(new Missile());
+            count_second_proyectile = 0;
         }
         second = 0;
         seconds_passed++;
@@ -86,12 +109,18 @@ void idle(){
         thing->update(deltaTime);
 
         bool collide = player.collide(thing);
+        if(collide){
+            reset();
+        }
 
         // Checar tambien la moneda que se encuentra en moneda
         if(thing->ID == WALL){
             Wall* w = (Wall*) thing;
             collide = player.collide(w->coin);
-            if(collide && !w->coin->isDestructible) w->coin->onCollide(PLAYER);
+            if(collide && w->coin->isActive){
+                 w->coin->onCollide(PLAYER);
+                 score++;
+            };
         }
         // Nos deshacemos de los elementos no visibles y destructibles
         // Que no sea visible no signifca que tambien destructible
@@ -136,7 +165,7 @@ int main(int argc, char** argv) {
 
     // Inicializar GLUT y crear una ventana
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
+    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
     glutInitWindowSize(WIDTH, HEIGHT);
     glutCreateWindow("Proyecto Geometria Computacional");
 

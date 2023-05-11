@@ -10,7 +10,6 @@
 class Coin : public Sprite, Collidable
 {
     public:
-        int timesCollided = 0;
         Coin() : Sprite(), Collidable(this) {
             Sprite::h = 0.02;
             Sprite::w = 0.02;
@@ -41,14 +40,11 @@ class Coin : public Sprite, Collidable
         }
 
         void onCollide(ENTITIES entity){
-            if(!Sprite::isDestructible && Sprite::isVisible && this->timesCollided  < 1){
+            if(Sprite::isActive){
                 if(entity == PLAYER){
-                    std::cout << this->isVisible;
                     this->isVisible = false;
                     this->isActive = false;
                     this->isDestructible = true;
-                    this->timesCollided++;
-                    std::cout << this->timesCollided << std::endl;
                 }
             }
         }

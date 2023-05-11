@@ -50,6 +50,10 @@ void Player::fall(){
     this->isFalling = true;
 }
 
+void Player::death(){
+    this->isAlive = false;
+}
+
 void Player::drawPlayer(){
     if(Sprite::isVisible){
         glColor3f(0.0f, 0.5f, -1.0f);

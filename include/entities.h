@@ -7,5 +7,6 @@ enum ENTITIES {
     PLAYER,
     WALL,
     COIN,
+    MISSILE,
 };
 #endif // ENTITIES_H

@@ -17,6 +17,7 @@ class Player : public Sprite, public Collidable
         virtual ~Player();
         void jump();
         void fall();
+        void death();
 
 
         // Sprite

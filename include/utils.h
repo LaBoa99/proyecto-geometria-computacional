@@ -3,6 +3,8 @@
 
 #include <random>
 #include <iostream>
+#include <GL/gl.h>
+#include <GL/freeglut.h>
 
 class Utils
 {
@@ -26,6 +28,11 @@ class Utils
 
         static inline bool genBooleanWithProbability(float probability) {
             return Utils::genRandomFloat() < probability;
+        }
+
+        static inline void renderText(const char* text){
+            glRasterPos2f(0.01f, 0.9f);
+            glutBitmapString(GLUT_BITMAP_HELVETICA_18, (const unsigned char*) text);
         }
 };
 
