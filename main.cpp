@@ -11,12 +11,14 @@
 #include "include/player.h"
 #include "include/wall.h"
 #include "include/utils.h"
+#include "entities.h"
 
 using namespace std;
 
 unsigned const int WIDTH = 800;
 unsigned const int HEIGHT = 800;
 unsigned int phase = 1;
+unsigned int score = 0;
 
 float lastTime = 0;
 float second = 0;
@@ -82,6 +84,15 @@ void idle(){
     for(int i = 0; i < things.size(); i++){
         Sprite* thing = things[i];
         thing->update(deltaTime);
+
+        bool collide = player.collide(thing);
+
+        // Checar tambien la moneda que se encuentra en moneda
+        if(thing->ID == WALL){
+            Wall* w = (Wall*) thing;
+            collide = player.collide(w->coin);
+            if(collide && !w->coin->isDestructible) w->coin->onCollide(PLAYER);
+        }
         // Nos deshacemos de los elementos no visibles y destructibles
         // Que no sea visible no signifca que tambien destructible
         if(thing->isDestructible){

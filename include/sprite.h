@@ -1,12 +1,16 @@
 #ifndef SPRITE_H
 #define SPRITE_H
 
+#include "entities.h"
 
 class Sprite {
     public:
     float pos[2];
+    float w, h;
     bool isVisible = true;
     bool isDestructible = false;
+    bool isActive = true;
+    ENTITIES ID = ANY;
 
     Sprite() {
         this->pos[0] = 0.0f;

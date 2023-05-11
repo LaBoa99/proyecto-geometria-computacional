@@ -2,9 +2,10 @@
 #define PLAYER_H
 
 #include "sprite.h"
+#include "collidable.h"
 
 
-class Player : public Sprite
+class Player : public Sprite, public Collidable
 {
     public:
         bool isJumping = false;
@@ -21,6 +22,8 @@ class Player : public Sprite
         // Sprite
         void update(float deltaTime) override;
         void draw() override;
+        // Collision
+        void onCollide(ENTITIES entity) override;
 
     private:
         void drawPlayer();

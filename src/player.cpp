@@ -2,14 +2,21 @@
 #include <iostream>
 #include <GL/gl.h>
 #include <math.h>
+#include "entities.h"
 
-Player::Player() : Sprite(){
+Player::Player() : Sprite() , Collidable(this){
     Sprite::pos[0] = 0.1f;
     Sprite::pos[1] = 0.5f;
+    Sprite::w = this->SIZE;
+    Sprite::h = this->SIZE;
+    Sprite::ID = PLAYER;
 }
 
 void Player::draw(){
     this->drawPlayer();
+}
+
+void Player::onCollide(ENTITIES entity){
 }
 
 void Player::update(float deltaTime) {
