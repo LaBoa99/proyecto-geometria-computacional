@@ -21,7 +21,7 @@ Wall::~Wall(){
 }
 
 void Wall::update(float deltaTime){
-    Sprite::pos[0] -= 0.1 * deltaTime;
+    Sprite::pos[0] -= 0.3f * deltaTime;
     // update status
     bool isOverpasedToLeft = Sprite::pos[0] < -this->WIDTH_RECT ;
     Sprite::isVisible = isOverpasedToLeft || Sprite::pos[0] < (1 + this->WIDTH_RECT);

@@ -18,7 +18,7 @@ class Coin : public Sprite, Collidable
         virtual ~Coin() {}
 
         void update(float deltaTime) override {
-            Sprite::pos[0] -= 0.1 * deltaTime;
+            Sprite::pos[0] -= 0.3 * deltaTime;
             // update status
             bool isOverpasedToLeft = Sprite::pos[0] < -Sprite::w ;
             if(Sprite::isVisible == false){

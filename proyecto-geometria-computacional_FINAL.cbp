@@ -34,6 +34,7 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="include/Missile.h" />
 		<Unit filename="include/coin.h" />
 		<Unit filename="include/collidable.h" />
 		<Unit filename="include/entities.h" />
@@ -42,6 +43,7 @@
 		<Unit filename="include/utils.h" />
 		<Unit filename="include/wall.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="src/Missile.cpp" />
 		<Unit filename="src/player.cpp" />
 		<Unit filename="src/wall.cpp" />
 		<Extensions>

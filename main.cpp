@@ -13,6 +13,7 @@
 #include "include/wall.h"
 #include "include/utils.h"
 #include "Missile.h"
+#include "missile_tel.h"
 #include "entities.h"
 
 using namespace std;
@@ -30,6 +31,7 @@ clock_t current_ticks;
 // Game opts
 vector<Sprite*> things;
 Player player;
+Player* p;
 // cada X segundos genera un nueva wall
 unsigned int every_second_wall = 5;
 unsigned int count_second_wall = 0;
@@ -38,7 +40,9 @@ unsigned int every_second_proyectile = 3;
 unsigned int count_second_proyectile = 0;
 
 void init(){
+    p = &player;
     things.push_back(new Wall());
+    things.push_back(new Missile_tel(&player));
 }
 
 void reset(){
@@ -95,7 +99,12 @@ void idle(){
             count_second_wall = 0;
         }
         if(count_second_proyectile >= every_second_proyectile){
+            if(Utils::genBooleanWithProbability(0.5)){
+                            things.push_back(new Missile_tel(&player));
+            } else {
+
             things.push_back(new Missile());
+            }
             count_second_proyectile = 0;
         }
         second = 0;
